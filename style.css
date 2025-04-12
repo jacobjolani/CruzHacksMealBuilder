@@ -1,0 +1,30 @@
+body {
+    background-color: rgb(203, 202, 212);
+    color: rgb(0, 0, 0);
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+}
+button {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+input[type="text"] {
+    display: block;
+    margin: 0 auto;
+    text-align: center; /* Center align the text inside the input box */
+    width: 300px; /* Make the text box larger */
+    height: 40px; /* Adjust height for better proportions */
+    border-radius: 20px; /* Make the text box rounder */
+}
