@@ -1,0 +1,163 @@
+[
+  {
+    "food_name": "Beef Chili Colorado Stew",
+    "calories": "172.47",
+    "fat": "7.33",
+    "carbs": "2.75",
+    "protein": "24.1"
+  },
+  {
+    "food_name": "Vegan \"Beef\" Chili Colorado",
+    "calories": "165.88",
+    "fat": "7.7",
+    "carbs": "8.77",
+    "protein": "22.62"
+  },
+  {
+    "food_name": "Long Grain Rice",
+    "calories": "206.63",
+    "fat": "4.56",
+    "carbs": "37.03",
+    "protein": "3.12"
+  },
+  {
+    "food_name": "Sauteed Corn Pasilla",
+    "calories": "118.7",
+    "fat": "4.42",
+    "carbs": "16.29",
+    "protein": "2.77"
+  },
+  {
+    "food_name": "Kosher Beef Meatloaf",
+    "calories": "291.06",
+    "fat": "12.77",
+    "carbs": "20.64",
+    "protein": "23.31"
+  },
+  {
+    "food_name": "Roasted Potatoes",
+    "calories": "122.09",
+    "fat": "4.72",
+    "carbs": "18.06",
+    "protein": "2.15"
+  },
+  {
+    "food_name": "Sauteed Green Beans",
+    "calories": "52.39",
+    "fat": "1.51",
+    "carbs": "7.78",
+    "protein": "1.32"
+  },
+  {
+    "food_name": "Roasted Cherry Tomato",
+    "calories": "55.64",
+    "fat": "4.5",
+    "carbs": "3.64",
+    "protein": "0.94"
+  },
+  {
+    "food_name": "Mushroom Pizza",
+    "calories": "264.32",
+    "fat": "10.28",
+    "carbs": "31.09",
+    "protein": "12.55"
+  },
+  {
+    "food_name": "Pepperoni Pizza",
+    "calories": "303.53",
+    "fat": "14.92",
+    "carbs": "29.89",
+    "protein": "12.32"
+  },
+  {
+    "food_name": "Creamy Herb Mushroom Penne Pasta",
+    "calories": "148.53",
+    "fat": "9.05",
+    "carbs": "13.36",
+    "protein": "3.93"
+  },
+  {
+    "food_name": "Vegan Primavera Sauce",
+    "calories": "27.4",
+    "fat": "1.26",
+    "carbs": "3.71",
+    "protein": "0.74"
+  },
+  {
+    "food_name": "Baked Penne Pasta",
+    "calories": "178.29",
+    "fat": "4.84",
+    "carbs": "27.4",
+    "protein": "6.85"
+  },
+  {
+    "food_name": "Roasted Oregano Corn",
+    "calories": "130.63",
+    "fat": "4.76",
+    "carbs": "17.92",
+    "protein": "2.99"
+  },
+  {
+    "food_name": "Sauteed Green Beans",
+    "calories": "52.39",
+    "fat": "1.51",
+    "carbs": "7.78",
+    "protein": "1.32"
+  },
+  {
+    "food_name": "Vegan Italian \"Sausage\" with Peppers and Onions",
+    "calories": "299.93",
+    "fat": "19.73",
+    "carbs": "11.49",
+    "protein": "17.7"
+  },
+  {
+    "food_name": "New England Clam Chowder",
+    "calories": "268.64",
+    "fat": "18.51",
+    "carbs": "17.6",
+    "protein": "5.56"
+  },
+  {
+    "food_name": "Southwestern Corn Chowder",
+    "calories": "166.74",
+    "fat": "5.56",
+    "carbs": "27.76",
+    "protein": "2.77"
+  },
+  {
+    "food_name": "Roasted Tri Tip",
+    "calories": "187.4",
+    "fat": "9.7",
+    "carbs": "0",
+    "protein": "23.42"
+  },
+  {
+    "food_name": "Vegan Italian \"Sausage\"",
+    "calories": "248.22",
+    "fat": "15.88",
+    "carbs": "7.94",
+    "protein": "16.87"
+  },
+  {
+    "food_name": "Wild Rice",
+    "calories": "166.42",
+    "fat": "1.45",
+    "carbs": "34.62",
+    "protein": "3.42"
+  },
+  {
+    "food_name": "Brussels Sprouts",
+    "calories": "65.88",
+    "fat": "2.47",
+    "carbs": "9.75",
+    "protein": "3.68"
+  },
+  {
+    "food_name": "Vegan Lemon Sugar Cookie",
+    "calories": "149.4",
+    "fat": "9.45",
+    "carbs": "34.02",
+    "protein": "1.89"
+  }
+]
