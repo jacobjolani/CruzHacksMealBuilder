@@ -1,0 +1,49 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+import json
+import time
+
+url = "https://dining.berkeley.edu/menus/"
+driver = webdriver.Chrome()
+driver.get(url)
+
+menu_items = driver.find_elements(By.CLASS_NAME, "recip")
+
+for item in menu_items:
+    try:
+        food_name = item.text.strip()
+
+        driver.execute_script("arguments[0].scrollIntoView(true);", item)
+        WebDriverWait(driver, 10).until(EC.visibility_of(item))
+        ActionChains(driver).move_to_element(item).pause(0.5).click().perform()
+        print(f"Clicked: {food_name}")
+
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, "div.cald-popup-wrapper.show"))
+        )
+
+        popup = driver.find_element(By.CSS_SELECTOR, "div.cald-popup-wrapper.show")
+        details = popup.find_element(By.CLASS_NAME, "recipe-details-wrap")
+
+        calories = details.find_element(By.XPATH, ".//li[1]").text
+        fat = details.find_element(By.XPATH, ".//li[2]").text
+        carbs = details.find_element(By.XPATH, ".//li[7]").text
+        protein = details.find_element(By.XPATH, ".//li[10]").text
+
+        print(f"{food_name} → Calories: {calories}, Fat: {fat}, Carbs: {carbs}, Protein: {protein}")
+
+        close_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "a.cald-close"))
+        )
+        close_button.click()
+        time.sleep(0.5)
+
+    except Exception as e:
+        print(f"Error processing {item.text.strip()}: {e}")
+        continue
+
+input("Press Enter to exit")
+driver.quit()
