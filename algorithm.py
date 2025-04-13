@@ -1,116 +1,101 @@
-import requests
-from bs4 import BeautifulSoup
+import json
+import random
 
-def get_menu():
-    """Fetches and parses the Berkeley Dining menu."""
-    url = "https://dining.berkeley.edu/menus/"
-    response = requests.get(url)
-    response.raise_for_status() 
+def load_menu(brunch_file, dinner_file):
+    """Loads the menu data from JSON files."""
+    with open(brunch_file, 'r') as f_brunch:
+        brunch_menu = json.load(f_brunch)
+    with open(dinner_file, 'r') as f_dinner:
+        dinner_menu = json.load(f_dinner)
+    return brunch_menu + dinner_menu
 
-    soup = BeautifulSoup(response.content, "html.parser")
-    menu_sections = soup.find_all("div", class_="meal-menu")
-    all_menu_items = []
-
-    for section in menu_sections:
-        meal_name = section.find("h2").text.strip()
-        items = section.find_all("div", class_="menu-item")
-        for item in items:
-            item_name = item.find("div", class_="item-name").text.strip()
-            nutrition_div = item.find("div", class_="nutrition-info")
-            nutrition_data = {"calories": 0, "carbs": 0, "protein": 0, "fat": 0}
-
-            if nutrition_div:
-                lines = nutrition_div.text.strip().split("\n")
-                for line in lines:
-                    line = line.strip()
-                    if line.startswith("Calories:"):
-                        match = line.split("Calories: ")[1].split()[0]
-                        if match.isdigit():
-                            nutrition_data["calories"] = int(match)
-                    elif line.startswith("Carbs:"):
-                        match = line.split("Carbs: ")[1].split("g")[0]
-                        if match.isdigit():
-                            nutrition_data["carbs"] = int(match)
-                    elif line.startswith("Protein:"):
-                        match = line.split("Protein: ")[1].split("g")[0]
-                        if match.isdigit():
-                            nutrition_data["protein"] = int(match)
-                    elif line.startswith("Fat:"):
-                        match = line.split("Fat: ")[1].split("g")[0]
-                        if match.isdigit():
-                            nutrition_data["fat"] = int(match)
-
-            all_menu_items.append({"name": item_name, "nutrition": nutrition_data, "meal": meal_name})
-
-    return all_menu_items
-
-def recommend_meals(menu, goal, calories_goal=0, protein_goal=0, fat_goal=0, carbs_goal=0):
-    """Recommends meals based on the user's goal and macro limits."""
-    filtered_meals = []
+def calculate_nutrition(meal_items):
+    """Calculates the total nutrition for a list of meal items."""
+    total_calories = 0
+    total_fat = 0
     total_carbs = 0
     total_protein = 0
-    total_fat = 0
-    total_calories = 0
 
-    filtered_meals = [
-        item
-        for item in menu
-        if (
-            (calories_goal == 0 or item["nutrition"]["calories"] <= calories_goal)
-            and (protein_goal == 0 or item["nutrition"]["protein"] <= protein_goal)
-            and (fat_goal == 0 or item["nutrition"]["fat"] <= fat_goal)
-            and (carbs_goal == 0 or item["nutrition"]["carbs"] <= carbs_goal)
-        )
-    ]
+    for item in meal_items:
+        total_calories += float(item.get('calories', 0))
+        total_fat += float(item.get('fat', 0))
+        total_carbs += float(item.get('carbs', 0))
+        total_protein += float(item.get('protein', 0))
 
-    if "carbs" in goal.lower():
-        filtered_meals.sort(key=lambda x: x["nutrition"]["carbs"], reverse=True)
-    elif "protein" in goal.lower():
-        filtered_meals.sort(key=lambda x: x["nutrition"]["protein"], reverse=True)
-    elif "fat" in goal.lower():
-        filtered_meals.sort(key=lambda x: x["nutrition"]["fat"], reverse=True)
-    elif "calories" in goal.lower():
-        filtered_meals.sort(key=lambda x: x["nutrition"]["calories"], reverse=True)
+    return {
+        'calories': total_calories,
+        'fat': total_fat,
+        'carbs': total_carbs,
+        'protein': total_protein,
+    }
 
-    selected_meals = []
-    max_meals = 5
+def generate_meal_plan(menu, goal, target_amount):
+    """Generates a meal plan based on the user's goal and target amount."""
+    goal = goal.lower()
+    possible_meals = []
 
-    for i in range(min(max_meals, len(filtered_meals))):
-        meal = filtered_meals[i]
-        total_carbs += meal["nutrition"]["carbs"]
-        total_protein += meal["nutrition"]["protein"]
-        total_fat += meal["nutrition"]["fat"]
-        total_calories += meal["nutrition"]["calories"]
-        selected_meals.append(meal)
+    for item in menu:
+        if goal in ["carbs", "carbohydrates"] and float(item.get('carbs', 0)) > 0:
+            possible_meals.append(item)
+        elif goal in ["protein"] and float(item.get('protein', 0)) > 0:
+            possible_meals.append(item)
+        elif goal in ["fat", "fats"] and float(item.get('fat', 0)) > 0:
+            possible_meals.append(item)
+        elif goal in ["calories", "calories"] and float(item.get('calories', 0)) > 0:
+            possible_meals.append(item)
 
-    return {"meals": selected_meals, "totals": {"carbs": total_carbs, "protein": total_protein, "fat": total_fat, "calories": total_calories}}
+    if not possible_meals:
+        return "No suitable meals found for your goal."
 
-def generate_meal_plan(goal, calories_goal=0, protein_goal=0, fat_goal=0, carbs_goal=0):
-    """Generates and prints the meal plan."""
-    menu = get_menu()
-    meal_plan = recommend_meals(menu, goal, calories_goal, protein_goal, fat_goal, carbs_goal)
+    meal_plan = []
+    current_nutrition = {'calories': 0, 'fat': 0, 'carbs': 0, 'protein': 0}
+    num_items = 0
 
-    print("Recommended Meal Plan:")
-    if not meal_plan["meals"]:
-        print("No meals found matching your goal.")
-        return
+    while True:
+        chosen_meal = random.choice(possible_meals)
+        meal_plan.append(chosen_meal)
+        current_nutrition = calculate_nutrition(meal_plan)
+        num_items += 1
 
-    for meal in meal_plan["meals"]:
-        print(
-            f"{meal['name']} ({meal['meal']}) - Carbs: {meal['nutrition']['carbs']}g, "
-            f"Protein: {meal['nutrition']['protein']}g, Fat: {meal['nutrition']['fat']}g, "
-            f"Calories: {meal['nutrition']['calories']}cal"
-        )
-    print(
-        f"Total: Carbs: {meal_plan['totals']['carbs']}g, Protein: {meal_plan['totals']['protein']}g, "
-        f"Fat: {meal_plan['totals']['fat']}g, Calories: {meal_plan['totals']['calories']}cal"
-    )
+        if goal in ["carbs", "carbohydrates"] and abs(current_nutrition['carbs'] - target_amount) <= 10:
+            break
+        elif goal in ["protein"] and abs(current_nutrition['protein'] - target_amount) <= 10:
+            break
+        elif goal in ["fat", "fats"] and abs(current_nutrition['fat'] - target_amount) <= 10:
+            break
+        elif goal in ["calories", "calories"] and abs(current_nutrition['calories'] - target_amount) <= 50:
+            break
+
+        if num_items >= 4:
+            break
+
+    meal_plan_details = []
+    for item in meal_plan:
+        meal_plan_details.append(f"{item['food_name']} (Calories: {item['calories']}g, Fat: {item['fat']}g, Carbs: {item['carbs']}g, Protein: {item['protein']}g)")
+
+    return {
+        "meal_plan": meal_plan_details,
+        "total_nutrition": current_nutrition
+    }
+
+def main(goal, target_amount, brunch_file="Cafe3_brunch.json", dinner_file="Cafe3_dinner.json"):
+    """Main function to generate and print the meal plan."""
+    menu = load_menu(brunch_file, dinner_file)
+    result = generate_meal_plan(menu, goal, target_amount)
+
+    if isinstance(result, str):
+        print(result)
+    else:
+        print("Recommended Meal Plan:")
+        for item in result["meal_plan"]:
+            print(f"- {item}")
+        print("\nTotal Nutrition:")
+        print(f"Calories: {result['total_nutrition']['calories']}g")
+        print(f"Fat: {result['total_nutrition']['fat']}g")
+        print(f"Carbs: {result['total_nutrition']['carbs']}g")
+        print(f"Protein: {result['total_nutrition']['protein']}g")
 
 if __name__ == "__main__":
-    goal = input("Enter your macro goal (e.g., eat more carbs): ")
-    calories_goal = int(input("Max Calories (or 0 for no limit): ") or 0)
-    protein_goal = int(input("Max Protein (g) (or 0 for no limit): ") or 0)
-    fat_goal = int(input("Max Fat (g) (or 0 for no limit): ") or 0)
-    carbs_goal = int(input("Max Carbs (g) (or 0 for no limit): ") or 0)
-
-    generate_meal_plan(goal, calories_goal, protein_goal, fat_goal, carbs_goal)
+    goal = input("Enter your nutritional goal (carbs, protein, fat, or calories): ")
+    target_amount = float(input(f"Enter the target amount of {goal} (in grams or kcal): "))
+    main(goal, target_amount)
