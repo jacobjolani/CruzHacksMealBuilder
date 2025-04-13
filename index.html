@@ -1,19 +1,30 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UC Berkeley Meal Builder</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <h1>UC Berkeley Meal Builder</h1>
-    <p1> This is a simple meal builder for UC Berkeley students. simply put the amount of Protein, calories, fats, and carbs youd like and we'll build you a meal plan. </p1>
-    <h2> Meal Builder </h2>
-    <img src="Images/Protein_image.jpg" alt="Protein Image" style="width:20%; height:20%;">
+    <p>
+      Simply put the amount of Protein, calories, fats, and carbs youd like and
+      we'll build you a meal plan.
+      <br />
+      Leave items blank if you do not have a preferance for that nutritional
+      data
+    </p>
+    <h2>Meal Builder</h2>
 
-
-</body>
+    <div id="input-container"></div>
+    <div id="ai-helper" class="form-container">
+      <h2>Ask a Nutrition Question</h2>
+      <div class = "ai-input-group">
+      <input type="text" id="user-question" placeholder="e.g. Is peanut butter high in fat?" />
+      <button id="ask-button">Ask</button>
+     </div>
+    </div>
+  </body>
 </html>
