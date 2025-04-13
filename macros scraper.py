@@ -12,6 +12,9 @@ driver.get(url)
 
 menu_items = driver.find_elements(By.CLASS_NAME, "recip")
 
+for i in range(len(menu_items)):
+    item = driver.find_elements(By.CLASS_NAME, "recip")[i]
+
 for item in menu_items:
     try:
         food_name = item.text.strip()
@@ -28,18 +31,31 @@ for item in menu_items:
         popup = driver.find_element(By.CSS_SELECTOR, "div.cald-popup-wrapper.show")
         details = popup.find_element(By.CLASS_NAME, "recipe-details-wrap")
 
-        calories = details.find_element(By.XPATH, ".//li[1]").text
-        fat = details.find_element(By.XPATH, ".//li[2]").text
-        carbs = details.find_element(By.XPATH, ".//li[7]").text
-        protein = details.find_element(By.XPATH, ".//li[10]").text
+        li_elements = details.find_elements(By.TAG_NAME, "li")
+
+        calories = fat = carbs = protein = "N/A"
+        for li in li_elements:
+            text = li.text.strip()
+            if "Calories" in text:
+                calories = text.split(":")[-1].strip()
+            elif "Fat" in text and "Total" in text:
+                fat = text.split(":")[-1].strip()
+            elif "Carbohydrate" in text:
+                carbs = text.split(":")[-1].strip()
+            elif "Protein" in text:
+                protein = text.split(":")[-1].strip()
+
 
         print(f"{food_name} → Calories: {calories}, Fat: {fat}, Carbs: {carbs}, Protein: {protein}")
 
         close_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "a.cald-close"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "a.cald-close"))
         )
-        close_button.click()
+        driver.execute_script("arguments[0].scrollIntoView(true);", close_button)
+        time.sleep(0.3)
+        driver.execute_script("arguments[0].click();", close_button)
         time.sleep(0.5)
+
 
     except Exception as e:
         print(f"Error processing {item.text.strip()}: {e}")
