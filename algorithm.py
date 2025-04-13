@@ -5,7 +5,7 @@ def get_menu():
     """Fetches and parses the Berkeley Dining menu."""
     url = "https://dining.berkeley.edu/menus/"
     response = requests.get(url)
-    response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+    response.raise_for_status() 
 
     soup = BeautifulSoup(response.content, "html.parser")
     menu_sections = soup.find_all("div", class_="meal-menu")
