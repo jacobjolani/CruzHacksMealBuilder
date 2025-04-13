@@ -1,3 +1,4 @@
+alert("JavaScript is running!"); // Add this line
 document.addEventListener("DOMContentLoaded", () => {
   // ... (input form creation) ...
 
