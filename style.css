@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
-    background-color: rgb(203, 202, 212);
+    background-color: rgb(214, 212, 232);
     color: #333;
     font-size: 16px;
   }
@@ -34,6 +34,11 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* center everything horizontally */
+    gap: 15px;
+    margin-bottom: 30px;
   }
   
   .form-container {
@@ -41,9 +46,8 @@ body {
     border-radius: 12px;
   }
   
-  input[type="text"],
   input[type="number"] {
-    width: 100%;
+    width: 250px;
     max-width: 350px;
     padding: 12px 15px;
     margin: 10px auto;
@@ -54,9 +58,7 @@ body {
     font-size: 1rem;
   }
   
-  input[type="text"]:hover,
   input[type="number"]:hover,
-  input[type="text"]:focus,
   input[type="number"]:focus {
     background-color: #003262;
     border-color: #003262;
@@ -80,38 +82,15 @@ body {
   }
   
   button:hover {
-    background-color: #001f4d;
+    background-color: #fcfdff;
   }
-  
-  .response-box {
-    margin-top: 20px;
-    background: #f1f1f1;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: left;
-    font-size: 0.95rem;
-    color: #222;
-  }
-  
-  .ai-input-group {
+  .input-wrapper {
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 10px;
   }
-  
-  @media (max-width: 600px) {
-    input[type="text"],
-    input[type="number"] {
-      width: 90%;
-    }
-  
-    .container {
-      padding: 20px 10px;
-    }
-  
-    button {
-      width: 100%;
-    }
+  .input-wrapper label {
+    width: 100px;
+    text-align: center;
+    font-weight: 500;
   }
-  
