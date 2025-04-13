@@ -90,9 +90,6 @@ def index():
 def results():
     return render_template('results.html')
 
-@app.route('/test')
-def test():
-    return render_template('test.html')
 
 # API endpoint for generating meal plans
 @app.route('/generate_meal', methods=['POST'])
