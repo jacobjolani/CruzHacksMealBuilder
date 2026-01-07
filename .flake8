@@ -1,0 +1,17 @@
+[flake8]
+max-line-length = 127
+exclude = 
+    .git,
+    __pycache__,
+    venv,
+    env,
+    .venv,
+    migrations,
+    .pytest_cache
+ignore = 
+    E203,
+    E501,
+    W503
+max-complexity = 10
+
+
