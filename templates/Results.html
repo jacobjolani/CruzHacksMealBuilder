@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Meal Results</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
             margin: 0;
@@ -47,7 +47,7 @@
     <div id="overlay">
         <div id="results">
             </div>
-        <a href="index.html" class="button">Back to Meal Builder</a>
+        <a href="{{ url_for('index') }}" class="button">Back to Meal Builder</a>
     </div>
 
     <script>

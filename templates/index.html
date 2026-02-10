@@ -4,20 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UC Berkeley Meal Builder</title>
-    <link rel="stylesheet" href="../style.css" />
-    <script src="../script.js" defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
   </head>
   <body>
     <h1>UC Berkeley Meal Builder</h1>
     <p>
-      Put the amount of Protein, calories, fats, and carbs you'd like and
-      we'll build you a meal plan.
+      Enter your target <strong>protein</strong>, <strong>calories</strong>, <strong>fats</strong>, or <strong>carbs</strong> below and we'll build you a meal plan.
       <br />
-      Leave items blank if you do not have a preferance for that nutritional
-      data
+      Leave items blank if you do not have a preference for that nutrient.
     </p>
     <h2>Meal Builder</h2>
+    <p style="text-align: center; color: #555; margin-bottom: 20px;">
+      Sign in to enter your targets and click <strong>Get my meal plan</strong> to see recommendations.
+    </p>
     <div id="input-container"></div>
-    
   </body>
 </html>
