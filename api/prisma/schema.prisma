@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model MenuDay {
+  id         String     @id @default(cuid())
+  date       String     @unique // YYYY-MM-DD
+  sourceUrl  String?
+  scrapedAt  DateTime   @default(now())
+  menuItems  MenuItem[]
+}
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  menuDayId   String
+  menuDay     MenuDay  @relation(fields: [menuDayId], references: [id], onDelete: Cascade)
+  name        String
+  mealPeriod  String   // breakfast | lunch | dinner | any
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+  tags        String?  // JSON array e.g. ["vegetarian"] or allergens
+}
+
+model UserProfile {
+  id            String    @id @default(cuid())
+  sessionId     String    @unique
+  dailyCalories Float?
+  dailyProtein  Float?
+  dailyCarbs    Float?
+  dailyFat      Float?
+  preferences   String?   // JSON: { vegetarian?: boolean, excludeAllergens?: string[], maxBudget?: number }
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  mealPlans     MealPlan[]
+}
+
+model MealPlan {
+  id         String   @id @default(cuid())
+  menuDayId String
+  sessionId String
+  profile   UserProfile? @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  totalsCalories Float
+  totalsProtein  Float
+  totalsCarbs    Float
+  totalsFat      Float
+  meals     String   // JSON: { breakfast: MenuItem[], lunch: MenuItem[], dinner: MenuItem[] }
+}

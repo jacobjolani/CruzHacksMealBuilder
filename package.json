@@ -1,0 +1,17 @@
+{
+  "name": "meal-planner-mvp",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "cd api && npm run dev",
+    "dev:web": "cd web && npm run dev",
+    "build": "npm run build:api && npm run build:web",
+    "build:api": "cd api && npm run build",
+    "build:web": "cd web && npm run build",
+    "db:migrate": "cd api && npx prisma migrate dev",
+    "db:studio": "cd api && npx prisma studio"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

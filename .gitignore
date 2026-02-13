@@ -1,30 +1,31 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# Dependencies
+node_modules/
 
-# Virtual Environment
-venv/
-ENV/
-env/
-.venv
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+build/
+.next/
+out/
+
+# Database
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Prisma
+api/prisma/*.db
+api/prisma/*.db-journal
+
+# Logs
+logs/
+*.log
+npm-debug.log*
 
 # IDE
 .vscode/
@@ -33,40 +34,16 @@ env/
 *.swo
 *~
 
-# Environment variables
-.env
-.env.local
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Logs
-logs/
-*.log
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.hypothesis/
-
 # OS
 .DS_Store
 Thumbs.db
 
-# Docker
-.dockerignore
+# Testing
+coverage/
+.nyc_output/
 
-# Flask
-instance/
-.webassets-cache
-
-# Coverage reports
-coverage.xml
-*.cover
-.hypothesis/
-
-
+# Python (legacy, keep for safety)
+.venv/
+venv/
+__pycache__/
+*.py[cod]

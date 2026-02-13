@@ -1,182 +1,72 @@
-# AI-Powered Meal Planner
+# Meal Planner MVP
 
-A full-stack meal planning application built with Python, Flask, JavaScript, HTML/CSS. Features REST APIs, authentication, recommendation engine, database schema, caching layer, and cloud deployment support.
+Automated meal planner: UC Berkeley dining menu → 3 daily meals (breakfast, lunch, dinner) that meet your macro targets. Session-based; no auth.
 
-## Features
+## Stack
 
-- **REST APIs**: Full RESTful API endpoints for meal generation and user management
-- **Authentication**: User registration, login, and session management with Flask-Login
-- **Recommendation Engine**: AI-powered meal plan generation based on nutritional goals
-- **Database Schema**: SQLAlchemy models for users, meal plans, and menu items
-- **Caching Layer**: In-memory caching (can be upgraded to Redis) reducing response latency by 58%
-- **Cloud Deployment**: Docker and cloud configuration files for easy deployment
-- **Auto-scaling**: Docker Compose configuration with load balancing and automated scaling
+- **API:** Node.js, Express, TypeScript, Prisma, SQLite (path to Postgres), Playwright scraper, node-cron daily scrape.
+- **Web:** Next.js 15 (App Router), TypeScript, Tailwind.
 
-## Setup
+## Run locally
 
-### Prerequisites
-
-- Python 3.11+
-- PostgreSQL (for production) or SQLite (for development)
-- Redis (optional, for enhanced caching)
-
-### Installation
-
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-2. Initialize the database:
-```bash
-python init_db.py
-```
-
-3. Run the application:
-```bash
-python app.py
-```
-
-The application will be available at `http://localhost:5000`
-
-## Docker Deployment
-
-### Using Docker Compose
-
-1. Build and start all services:
-```bash
-docker-compose up -d
-```
-
-2. Initialize the database (first time only):
-```bash
-docker-compose exec web python init_db.py
-```
-
-The application will be available at `http://localhost:5000`
-
-### Docker Compose Features
-
-- **Auto-scaling**: Configured with 3 replicas by default
-- **Load Balancing**: Automatic load distribution across instances
-- **PostgreSQL**: Persistent database storage
-- **Redis**: Caching service (ready for integration)
-
-## Cloud Deployment
-
-### Google Cloud Platform
-
-1. Update `app.yaml` with your environment variables
-2. Deploy using:
-```bash
-gcloud app deploy
-```
-
-### Environment Variables
-
-Set the following environment variables:
-- `SECRET_KEY`: Flask secret key for sessions
-- `DATABASE_URL`: PostgreSQL connection string
-- `REDIS_URL`: Redis connection string (optional)
-
-## API Endpoints
-
-### Authentication
-- `POST /register` - Register a new user
-- `POST /login` - Login user
-- `POST /logout` - Logout user
-- `GET /api/user` - Get current user info
-
-### Meal Planning
-- `POST /generate_meal` - Generate a meal plan (requires authentication)
-- `GET /api/meal_plans` - Get user's meal plan history
-
-## Database Schema
-
-- **User**: Stores user accounts with authentication
-- **MealPlan**: Stores generated meal plans linked to users
-- **MenuItem**: Stores menu items from JSON files
-
-## Performance Optimizations
-
-- **Caching**: Menu data cached for 1 hour, meal plans cached for 5 minutes
-- **Database Indexing**: Optimized queries for user meal plans
-- **Response Time**: Caching layer reduces latency by 58%
-
-## Project Structure
-
-```
-CruzHacksMealBuilder/
-├── app.py                 # Main Flask application
-├── models.py              # Database models
-├── algorithm.py           # Meal planning algorithm
-├── init_db.py             # Database initialization
-├── requirements.txt       # Python dependencies
-├── Dockerfile            # Docker configuration
-├── docker-compose.yml    # Multi-container setup
-├── app.yaml              # Cloud deployment config
-├── templates/            # HTML templates
-├── script.js             # Frontend JavaScript
-└── style.css             # Styling
-```
-
-## Development
-
-### Running in Development Mode
+### One-time setup
 
 ```bash
-export FLASK_ENV=development
-python app.py
+# Install root + api + web
+npm install
+cd api && npm install && cd ..
+cd web && npm install && cd ..
+
+# Database (SQLite)
+cd api
+cp .env.example .env
+npx prisma generate
+npx prisma db push
+npm run db:seed
+cd ..
 ```
 
-### Database Migrations
+### Dev (two terminals)
 
-The application uses SQLAlchemy. For production, consider using Flask-Migrate for database migrations.
-
-## Testing
-
-Run tests with pytest:
+**Terminal 1 — API (port 4000):**
 ```bash
-pytest tests/ -v
+npm run dev:api
 ```
 
-Run tests with coverage:
+**Terminal 2 — Web (port 3000):**
 ```bash
-pytest tests/ -v --cov=app --cov=models --cov-report=html
+npm run dev:web
 ```
 
-## Code Quality
+Then open **http://localhost:3000**. Set targets on `/`, then go to `/plan` to generate and view today’s meals.
 
-The project includes:
-- **Linting**: flake8 for code style checking
-- **Formatting**: black for code formatting
-- **Import sorting**: isort for import organization
-- **CI/CD**: GitHub Actions for automated testing and deployment
+### Single command (both)
 
-Run code quality checks:
 ```bash
-flake8 app.py models.py
-black --check app.py models.py
-isort --check-only app.py models.py
+npm run dev
 ```
 
-## Security Features
+(Requires `concurrently`; install with `npm install` at root.)
 
-- **Rate Limiting**: API endpoints protected with rate limits
-- **Input Validation**: All user inputs are validated
-- **Password Hashing**: Secure password storage with Werkzeug
-- **CORS**: Cross-origin resource sharing configured
-- **Error Handling**: Comprehensive error handling and logging
+## Env
 
-## API Documentation
+- **api/.env:** `DATABASE_URL="file:./prisma/dev.db"`, `PORT=4000`, optional `BERKELEY_MENU_URL`.
+- **web:** Optional `NEXT_PUBLIC_API_URL=http://localhost:4000` (default for local).
 
-Access API documentation at `/api/docs` endpoint.
+## API (minimal)
 
-## Health Monitoring
+- `POST /api/profile` — Save targets (session cookie set by middleware).
+- `GET  /api/profile` — Get current profile.
+- `GET  /api/menu/today` — Today’s menu items (or `?date=YYYY-MM-DD`).
+- `POST /api/scrape/run` — Manual scrape (dev); idempotent for the day.
+- `POST /api/plan/generate` — Generate 3 meals; body: `dailyCalories`, `dailyProtein`, `dailyCarbs`, `dailyFat`.
+- `POST /api/plan/regenerate?meal=breakfast|lunch|dinner` — Regenerate one meal.
+- `POST /api/plan/swap` — Body: `meal`, `outItemId`, `inItemId` (swap one item in a meal).
 
-Health check endpoint available at `/health` for monitoring system status.
+## Scraper
 
-## License
+Berkeley menu is scraped via Playwright in `api/src/services/scraper.ts`. Selectors are isolated so they can be updated if the site changes. Daily cron runs at 5 AM; use `POST /api/scrape/run` for manual run. **First run without scraper:** use `npm run db:seed` in `api` to load sample menu for today. If you use the live scraper, install Chromium once: `cd api && npx playwright install chromium`.
 
-This project was built for CruzHacks 2024.
+## New architecture
 
+See **NEW_ARCHITECTURE.md** for audit, folder structure, and decisions.
